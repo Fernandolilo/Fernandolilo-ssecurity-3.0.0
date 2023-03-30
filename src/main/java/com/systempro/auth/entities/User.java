@@ -5,26 +5,23 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "USERS")
 public class User {
 
 	@Id
-	@GeneratedValue(generator = "uuid", strategy = GenerationType.AUTO)
-	@GenericGenerator(name = "uuid", strategy = "uuid")
-	@Column(name = "id")
-	private String id = UUID.randomUUID().toString();
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID id;
 	private String name;
 	private String cpf;
 	
@@ -44,7 +41,7 @@ public class User {
 
 	}
 
-	public User(String id, String name, String cpf, String email, String password) {
+	public User(UUID id, String name, String cpf, String email, String password) {
 		this.id = id;
 		this.name = name;
 		this.cpf = cpf;
@@ -52,11 +49,11 @@ public class User {
 		this.password = password;
 	}
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
