@@ -1,10 +1,15 @@
 package com.systempro.auth.services;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.systempro.auth.entities.User;
 import com.systempro.auth.entities.UserNewDTO;
 import com.systempro.auth.repositories.UserRepository;
+import com.systempro.auth.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class UserService {
@@ -13,6 +18,12 @@ public class UserService {
 
 	public UserService(UserRepository repository) {
 		this.repository = repository;
+	}
+	
+	@Transactional(readOnly = true)
+	public User findById(UUID id) {
+		Optional<User> user = repository.findById(id);
+		return user.orElseThrow(()-> new ObjectNotFoundException("Usuário não existe"));
 	}
 
 	public User create(User obj) {
