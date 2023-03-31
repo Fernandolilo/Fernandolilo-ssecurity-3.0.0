@@ -1,6 +1,7 @@
 package com.systempro.auth.controllers;
 
 import java.net.URI;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.systempro.auth.entities.User;
-import com.systempro.auth.entities.UserNewDTO;
+import com.systempro.auth.entities.dto.AuthenticationDTO;
+import com.systempro.auth.entities.dto.UserNewDTO;
 import com.systempro.auth.services.UserService;
 
 import jakarta.validation.Valid;
@@ -28,12 +30,20 @@ public class UserController {
 		this.service = service;
 	}
 
+	@PostMapping("/authenticate")
+	public ResponseEntity<Object> auth(@Valid @RequestBody AuthenticationDTO request)
+			throws UserPrincipalNotFoundException {
+		var user = service.fromAuthentication(request);
+		return ResponseEntity.ok().body(user);
+
+	}
+
 	@GetMapping("/{id}")
-	public ResponseEntity<User> findById(@PathVariable UUID id){
+	public ResponseEntity<User> findById(@PathVariable UUID id) {
 		User user = service.findById(id);
 		return ResponseEntity.ok().body(user);
-		
-	}	
+
+	}
 
 	@PostMapping("/register")
 	public ResponseEntity<Void> insert(@Valid @RequestBody UserNewDTO objDTO) {

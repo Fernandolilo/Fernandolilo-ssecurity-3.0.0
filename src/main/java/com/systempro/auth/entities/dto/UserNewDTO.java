@@ -1,4 +1,4 @@
-package com.systempro.auth.entities;
+package com.systempro.auth.entities.dto;
 
 import java.io.Serializable;
 import java.util.HashSet;

@@ -1,5 +1,6 @@
 package com.systempro.auth.services;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -7,7 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.systempro.auth.entities.User;
-import com.systempro.auth.entities.UserNewDTO;
+import com.systempro.auth.entities.dto.AuthenticationDTO;
+import com.systempro.auth.entities.dto.UserNewDTO;
 import com.systempro.auth.repositories.UserRepository;
 import com.systempro.auth.services.exceptions.ObjectNotFoundException;
 
@@ -19,11 +21,19 @@ public class UserService {
 	public UserService(UserRepository repository) {
 		this.repository = repository;
 	}
-	
+
+	public Optional<User> fromAuthentication(AuthenticationDTO request) throws UserPrincipalNotFoundException {
+
+		var auth = repository.findByEmail(request.getEmail());
+		var pass = repository.findByPassword(request.getPassword());
+
+		return Optional.of(auth.orElseThrow(() -> new UserPrincipalNotFoundException("email ou senha invalidos")));
+	}
+
 	@Transactional(readOnly = true)
 	public User findById(UUID id) {
 		Optional<User> user = repository.findById(id);
-		return user.orElseThrow(()-> new ObjectNotFoundException("Usuário não existe"));
+		return user.orElseThrow(() -> new ObjectNotFoundException("Usuário não existe"));
 	}
 
 	public User create(User obj) {
