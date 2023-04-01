@@ -33,13 +33,13 @@ public class JWTService {
 		return claimsResolver.apply(claims);
 	}
 
+	public boolean isTokenValid(String token, UserDetails userDetails) {
+		final String username = extractUsername(token);
+		return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+	}
+
 	private Claims extractAllClaims(String token) {
-		return Jwts.
-				parserBuilder()
-				.setSigningKey(getSignInKey())
-				.build()
-				.parseClaimsJws(token)
-				.getBody();
+		return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
 	}
 
 	private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
