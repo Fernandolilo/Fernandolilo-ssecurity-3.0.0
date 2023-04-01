@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -22,8 +23,11 @@ public class JWTService {
 		return generateToken(new HashMap<>(), userDetails);
 	}
 
-	private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+	 public String extractUsername(String token) {
+		    return extractClaim(token, Claims::getSubject);
+		  }
 
+	private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
 		return Jwts.builder()
 				.setClaims(null)
 				.setSubject(userDetails.getUsername())
