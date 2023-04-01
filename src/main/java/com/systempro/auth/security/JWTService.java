@@ -34,8 +34,12 @@ public class JWTService {
 	}
 
 	private Claims extractAllClaims(String token) {
-		// TODO Auto-generated method stub
-		return null;
+		return Jwts.
+				parserBuilder()
+				.setSigningKey(getSignInKey())
+				.build()
+				.parseClaimsJws(token)
+				.getBody();
 	}
 
 	private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
