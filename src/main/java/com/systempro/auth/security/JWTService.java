@@ -38,6 +38,10 @@ public class JWTService {
 		return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
 	}
 
+	private boolean isTokenExpired(String token) {
+		return extractClaim(token, Claims::getExpiration);
+	}
+
 	private Claims extractAllClaims(String token) {
 		return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
 	}
