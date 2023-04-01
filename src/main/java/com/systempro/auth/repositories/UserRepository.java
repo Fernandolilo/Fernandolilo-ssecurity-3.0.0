@@ -12,5 +12,6 @@ import com.systempro.auth.entities.User;
 public interface UserRepository extends JpaRepository<User, UUID> {
 
 	Optional<User> findByEmail(String email);
-	Optional<User> findByPassword(String password);
+
+	User findByPassword(String password);
 }

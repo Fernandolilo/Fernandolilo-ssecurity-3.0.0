@@ -22,12 +22,15 @@ public class UserService {
 		this.repository = repository;
 	}
 
-	public Optional<User> fromAuthentication(AuthenticationDTO request) throws UserPrincipalNotFoundException {
+	public Optional<User> fromAuthentication(AuthenticationDTO request) throws ObjectNotFoundException {
 
 		var auth = repository.findByEmail(request.getEmail());
-		var pass = repository.findByPassword(request.getPassword());
+		var password = repository.findByPassword(request.getPassword());
 
-		return Optional.of(auth.orElseThrow(() -> new UserPrincipalNotFoundException("email ou senha invalidos")));
+		if (!password.getPassword().equals(request.getPassword())) {
+			new ObjectNotFoundException("Senha invalidos");
+		}
+		return Optional.of(auth.orElseThrow(() -> new ObjectNotFoundException("email ou senha invalidos")));
 	}
 
 	@Transactional(readOnly = true)

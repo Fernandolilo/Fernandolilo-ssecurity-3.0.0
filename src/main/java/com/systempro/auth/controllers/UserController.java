@@ -1,7 +1,6 @@
 package com.systempro.auth.controllers;
 
 import java.net.URI;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -17,6 +16,7 @@ import com.systempro.auth.entities.User;
 import com.systempro.auth.entities.dto.AuthenticationDTO;
 import com.systempro.auth.entities.dto.UserNewDTO;
 import com.systempro.auth.services.UserService;
+import com.systempro.auth.services.exceptions.ObjectNotFoundException;
 
 import jakarta.validation.Valid;
 
@@ -32,7 +32,7 @@ public class UserController {
 
 	@PostMapping("/authenticate")
 	public ResponseEntity<Object> auth(@Valid @RequestBody AuthenticationDTO request)
-			throws UserPrincipalNotFoundException {
+			throws ObjectNotFoundException {
 		var user = service.fromAuthentication(request);
 		return ResponseEntity.ok().body(user);
 
