@@ -32,7 +32,12 @@ public class SecurityConfig {
 					.headers(headers -> headers.frameOptions().sameOrigin());
 		}
 
-		
+		http.csrf().disable()
+		.authorizeHttpRequests()
+		.requestMatchers("/users/register/**").permitAll()		
+		.anyRequest().authenticated()
+		.and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		
 		return http.build();
