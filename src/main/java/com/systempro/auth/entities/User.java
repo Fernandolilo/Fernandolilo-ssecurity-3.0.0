@@ -18,15 +18,15 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "USERS")
-public class User implements Serializable{
+public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 	private String name;
 	private String cpf;
-	
+
 	@JsonIgnore
 	private String password;
 	private String email;

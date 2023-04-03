@@ -1,6 +1,5 @@
 package com.systempro.auth.services;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,14 +22,19 @@ public class UserService {
 	}
 
 	public Optional<User> fromAuthentication(AuthenticationDTO request) throws ObjectNotFoundException {
-
 		var auth = repository.findByEmail(request.getEmail());
-		var password = repository.findByPassword(request.getPassword());
+		var pass = request.getPassword();
 
-		if (!password.getPassword().equals(request.getPassword())) {
-			new ObjectNotFoundException("Senha invalidos");
+		var findByPassword = repository.findByPassword(pass);
+
+		System.out.println("PASS*******: " + findByPassword);
+		if (!pass.equals(findByPassword.get().getPassword())) {
+
+			throw new ObjectNotFoundException("Not found password");
 		}
+
 		return Optional.of(auth.orElseThrow(() -> new ObjectNotFoundException("email ou senha invalidos")));
+
 	}
 
 	@Transactional(readOnly = true)
@@ -49,6 +53,7 @@ public class UserService {
 	public User fromNewDTO(UserNewDTO obj) {
 		User user = new User(null, obj.getName(), obj.getCpf(), obj.getEmail(), obj.getPassword());
 
+		System.out.println("Senha*******: " + obj.getPassword());
 		for (String telefones : obj.getTelefones()) {
 			user.getTelefones().add(telefones);
 		}
