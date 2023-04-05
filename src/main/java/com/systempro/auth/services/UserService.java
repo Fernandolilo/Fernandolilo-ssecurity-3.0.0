@@ -3,6 +3,7 @@ package com.systempro.auth.services;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +17,11 @@ import com.systempro.auth.services.exceptions.ObjectNotFoundException;
 public class UserService {
 
 	private final UserRepository repository;
+	private final BCryptPasswordEncoder encoder;
 
-	public UserService(UserRepository repository) {
+	public UserService(UserRepository repository, BCryptPasswordEncoder encoder) {
 		this.repository = repository;
+		this.encoder = encoder;
 	}
 
 	public Optional<User> fromAuthentication(AuthenticationDTO request) throws ObjectNotFoundException {
@@ -26,8 +29,6 @@ public class UserService {
 		var pass = request.getPassword();
 
 		var findByPassword = repository.findByPassword(pass);
-
-		System.out.println("PASS*******: " + findByPassword);
 		if (!pass.equals(findByPassword.get().getPassword())) {
 
 			throw new ObjectNotFoundException("Not found password");
@@ -51,9 +52,8 @@ public class UserService {
 	}
 
 	public User fromNewDTO(UserNewDTO obj) {
-		User user = new User(null, obj.getName(), obj.getCpf(), obj.getEmail(), obj.getPassword());
+		User user = new User(null, obj.getName(), obj.getCpf(), obj.getEmail(), encoder.encode(obj.getPassword()));
 
-		System.out.println("Senha*******: " + obj.getPassword());
 		for (String telefones : obj.getTelefones()) {
 			user.getTelefones().add(telefones);
 		}
