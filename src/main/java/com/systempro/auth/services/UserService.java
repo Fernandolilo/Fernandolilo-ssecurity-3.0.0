@@ -26,14 +26,7 @@ public class UserService {
 
 	public Optional<User> fromAuthentication(AuthenticationDTO request) throws ObjectNotFoundException {
 		var auth = repository.findByEmail(request.getEmail());
-		var pass = request.getPassword();
-
-		var findByPassword = repository.findByPassword(pass);
-		if (!pass.equals(findByPassword.get().getPassword())) {
-
-			throw new ObjectNotFoundException("Not found password");
-		}
-
+		
 		return Optional.of(auth.orElseThrow(() -> new ObjectNotFoundException("email ou senha invalidos")));
 
 	}

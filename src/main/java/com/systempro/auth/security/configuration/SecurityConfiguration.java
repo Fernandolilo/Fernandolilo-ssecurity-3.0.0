@@ -36,6 +36,7 @@ public class SecurityConfiguration {
 				return http.csrf().disable()
 		                .authorizeHttpRequests()
 		                .requestMatchers("/users/register").permitAll()
+		                .requestMatchers("/users/authenticate").permitAll()
 		                .anyRequest()
 		                .authenticated().and()
 		                .sessionManagement()
