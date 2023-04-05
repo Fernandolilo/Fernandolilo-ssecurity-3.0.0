@@ -7,8 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -31,7 +33,16 @@ public class SecurityConfiguration {
 							.and().csrf().ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).and()
 							.headers(headers -> headers.frameOptions().sameOrigin());
 				}
-		return http.build();
+				return http.csrf().disable()
+		                .authorizeHttpRequests()
+		                .requestMatchers("/users/register").permitAll()
+		                .anyRequest()
+		                .authenticated().and()
+		                .sessionManagement()
+		                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		                .and()
+		                .build();
+			
 
 	}
 
