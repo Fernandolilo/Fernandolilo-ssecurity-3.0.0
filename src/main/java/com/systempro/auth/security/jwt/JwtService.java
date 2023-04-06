@@ -32,6 +32,17 @@ public class JwtService {
 		return claimsResolver.apply(claims);
 	}
 
+	private Claims extractAllClaims(String token) {		
+		return 
+				Jwts
+				.parserBuilder()
+				.build()
+				.parseClaimsJwt(token)
+				.getBody();
+	}
+
+
+
 	// gera token
 	public String generateToken(String userName) {
 		Map<String, Object> claims = new HashMap<>();
