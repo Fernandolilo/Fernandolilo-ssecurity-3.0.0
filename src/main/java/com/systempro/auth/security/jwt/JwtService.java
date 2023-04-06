@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -19,29 +20,28 @@ public class JwtService {
 
 	public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
-	
 	// estrair o username do token//
-	 public String extractUsername(String token) {
-	        return extractClaim(token, Claims::getSubject);
-	    }
-	
+	public String extractUsername(String token) {
+		return extractClaim(token, Claims::getSubject);
+	}
 
-	 
 	private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-		final Claims claims = extractAllClaims(token);		
+		final Claims claims = extractAllClaims(token);
 		return claimsResolver.apply(claims);
 	}
 
-	private Claims extractAllClaims(String token) {		
-		return 
-				Jwts
-				.parserBuilder()
-				.build()
-				.parseClaimsJwt(token)
-				.getBody();
+	private Claims extractAllClaims(String token) {
+		return Jwts.parserBuilder().build().parseClaimsJwt(token).getBody();
 	}
+	
+	  public Boolean validateToken(String token, UserDetails userDetails) {
+	        final String username = extractUsername(token);
+	        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+	    }
 
-
+	  private Boolean isTokenExpired(String token) {
+	        return extractExpiration(token).before(new Date());
+	    }
 
 	// gera token
 	public String generateToken(String userName) {
