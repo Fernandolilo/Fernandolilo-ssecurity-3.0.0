@@ -43,6 +43,10 @@ public class JwtService {
 	        return extractExpiration(token).before(new Date());
 	    }
 
+	  public Date extractExpiration(String token) {
+	        return extractClaim(token, Claims::getExpiration);
+	    }
+
 	// gera token
 	public String generateToken(String userName) {
 		Map<String, Object> claims = new HashMap<>();
