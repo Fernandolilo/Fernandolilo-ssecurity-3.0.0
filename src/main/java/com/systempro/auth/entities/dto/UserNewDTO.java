@@ -1,7 +1,9 @@
 package com.systempro.auth.entities.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,7 +19,7 @@ public class UserNewDTO implements Serializable {
 
 	private Set<String> telefones = new HashSet<>();
 
-	private Set<String> roles = new HashSet<>();
+	private String roles;
 
 	public UserNewDTO() {
 
@@ -67,7 +69,7 @@ public class UserNewDTO implements Serializable {
 		return telefones;
 	}
 
-	public Set<String> getRoles() {
+	public String getRoles() {
 		return roles;
 	}
 }

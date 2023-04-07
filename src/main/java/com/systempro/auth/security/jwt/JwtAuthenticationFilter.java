@@ -2,10 +2,12 @@ package com.systempro.auth.security.jwt;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.systempro.auth.security.UserDetailsServiceImpl;
@@ -15,18 +17,18 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	private final UserDetailsServiceImpl userDetailsServiceImpl;
-	private final JwtService jwtService;
+	@Autowired
+	private UserDetailsServiceImpl userDetailsServiceImpl;
+	@Autowired
+	private JwtService jwtService;
 
-	public JwtAuthenticationFilter(UserDetailsServiceImpl userDetailsServiceImpl, JwtService jwtService) {
-		this.userDetailsServiceImpl = userDetailsServiceImpl;
-		this.jwtService = jwtService;
-	}
-
+	
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+	protected void doFilterInternal(
+			HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
 		// pegando o Header

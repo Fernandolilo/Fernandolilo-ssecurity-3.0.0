@@ -1,7 +1,9 @@
 package com.systempro.auth.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -26,7 +28,6 @@ public class User implements Serializable {
 	private UUID id;
 	private String name;
 	private String cpf;
-
 	@JsonIgnore
 	private String password;
 	private String email;
@@ -35,20 +36,19 @@ public class User implements Serializable {
 	@CollectionTable(name = "TELEFONE")
 	private Set<String> telefones = new HashSet<>();
 
-	@ElementCollection
-	@CollectionTable(name = "ROLES")
-	private Set<String> roles = new HashSet<>();
+	private String roles;
 
 	public User() {
 
 	}
 
-	public User(UUID id, String name, String cpf, String email, String password) {
+	public User(UUID id, String name, String cpf, String email, String password, String roles) {
 		this.id = id;
 		this.name = name;
 		this.cpf = cpf;
 		this.email = email;
 		this.password = password;
+		this.roles = roles;
 	}
 
 	public UUID getId() {
@@ -95,7 +95,7 @@ public class User implements Serializable {
 		return telefones;
 	}
 
-	public Set<String> getRoles() {
+	public String getRoles() {
 		return roles;
 	}
 
